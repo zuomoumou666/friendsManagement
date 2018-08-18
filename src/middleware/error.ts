@@ -1,4 +1,4 @@
-import errors, { ErrorKeyEnum } from "../consts";
+import { default as errors, ErrorKeyEnum } from "../consts";
 import * as R from "ramda";
 import { Context } from "koa";
 import * as HTTP_STATUS from "http-status";

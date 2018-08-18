@@ -1,11 +1,10 @@
-// require("module-alias/register");
 import koa from "koa";
 import mongoose from "mongoose";
 import koaBodyparser from "koa-bodyparser";
 import "./config/env";
-import { default as initDB } from "./seeding";
 import { router } from "./routes";
 import { finalErrorHandler } from "./middleware/error";
+import { default as initDB } from "./seeding";
 
 const { PORT, MONGO_DB_URL } = process.env;
 

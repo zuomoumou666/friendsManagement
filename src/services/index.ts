@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { UserModel } from "../models";
 import { User } from "../schema";
 
-const UserService = {
+const userService = {
   getUserByEmail: async (email: string) => {
     return await UserModel.findOne({ email });
   },
@@ -22,4 +22,4 @@ const UserService = {
   }
 };
 
-export default UserService;
+export default userService;

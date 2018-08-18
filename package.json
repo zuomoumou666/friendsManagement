@@ -18,41 +18,45 @@
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "kill-port": "lsof -i tcp:9228 | grep LISTEN | awk ‘{print $2}’ | xargs kill -9",
     "debug": "npm run build && npm run kill-port && npm run watch-debug",
-    "serve-debug": "nodemon --inspect=0.0.0.0:9228 dist/server.js --watch dist",
+    "serve-debug": "nodemon --inspect=0.0.0.0:9228 dist/server.js --watch dist --ignore test/",
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
-    "tslint-check": "tslint-config-prettier-check ./tslint.json"
+    "tslint-check": "tslint-config-prettier-check ./tslint.json",
+    "test:api": "tsc -p tsconfig.test.json && ./node_modules/.bin/mocha --timeout 50000 ./dist/test/api/**.test.js --reporter mochawesome --reporter-options overwrite=true --exit"
   },
   "devDependencies": {
-    "tslint": "^5.10.0",
-    "tslint-config-prettier": "^1.13.0",
-    "typescript": "^2.9.2"
-  },
-  "dependencies": {
+    "@types/chai": "^4.1.4",
     "@types/dotenv": "^4.0.3",
     "@types/http-status": "^0.2.30",
     "@types/koa": "^2.0.46",
     "@types/koa-bodyparser": "^5.0.0",
     "@types/koa-router": "^7.0.30",
+    "@types/mocha": "^5.2.5",
     "@types/mongoose": "^5.0.18",
     "@types/node": "^10.3.5",
     "@types/ramda": "^0.25.34",
+    "@types/supertest": "^2.0.5",
     "@types/validator": "^9.4.1",
+    "chai": "^4.1.2",
+    "http": "^0.0.0",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.0.3",
+    "supertest": "^3.1.0",
+    "tslint": "^5.10.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "tslint-config-prettier": "^1.13.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
     "concurrently": "^3.6.0",
     "dotenv": "^6.0.0",
     "http-status": "^1.2.0",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
-    "module-alias": "^2.1.0",
     "mongoose": "^5.1.7",
     "nodemon": "^1.17.5",
     "ramda": "^0.25.0",
-    "tslint-config-airbnb": "^5.9.2",
     "validator": "^10.6.0"
-  },
-  "_moduleAliases": {
-    "models": "dist/models",
-    "errors": "dist/errors"
   },
   "nodemonConfig": {
     "verbose": true,

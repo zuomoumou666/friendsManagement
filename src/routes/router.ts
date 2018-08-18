@@ -22,7 +22,7 @@ const passRoutes = (func: Function) => (
           code: 1,
           success: true
         },
-        R.isEmpty(values) ? null : { data: values }
+        R.isEmpty(values) ? null : { ...values }
       );
     })
     .then(() => next());

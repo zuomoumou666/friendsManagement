@@ -19,3 +19,5 @@ export default async function initDB() {
     console.log("======== Data Seeding ends ========");
   }
 }
+
+export { mocks };

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import * as R from "ramda";
-import validator from "validator";
 
 const Schema = mongoose.Schema;
 export interface User extends mongoose.Document {
@@ -20,13 +19,7 @@ const userSchema = new Schema(
       type: String,
       index: true,
       unique: true,
-      required: true,
-      validate: {
-        validator: function(v: string) {
-          return validator.isEmail(v);
-        },
-        message: (props: any) => `${props.value} is not a valid email`
-      }
+      required: true
     },
     friends: [String],
     subscribes: [String]
