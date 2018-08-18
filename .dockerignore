@@ -1,0 +1,14 @@
+# Configs
+.env.friends
+
+# Docker build
+*Dockerfile*
+*docker-compose*
+Dockerfile
+docker-compose.yml
+
+# Folders
+.data/
+.git/
+.vscode/
+npm-version/

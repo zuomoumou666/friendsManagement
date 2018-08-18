@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es6",
+    "module": "commonjs" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
+    "sourceMap": true /* Generates corresponding '.map' file. */,
+    "outDir": "dist" /* Redirect output structure to the directory. */,
+    "strict": true /* Enable all strict type-checking options. */,
+    "moduleResolution": "node" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
+    "baseUrl": "." /* Base directory to resolve non-absolute module names. */,
+    "paths": {
+      "models": ["src/models"],
+      "errors": ["src/errors"],
+      "*": ["node_modules/*", "src/types/*"]
+    } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
+    "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+  },
+  "include": ["src/**/*"]
+}

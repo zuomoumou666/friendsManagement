@@ -1,0 +1,16 @@
+{
+    "files.autoSave": "off",
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true
+    },
+    "typescript.referencesCodeLens.enabled": true,
+    "tslint.enable": true,
+    "tslint.ignoreDefinitionFiles": false,
+    "tslint.autoFixOnSave": true,
+    "tslint.exclude": "**/node_modules/**/*",
+    "editor.formatOnSave": true,
+    "prettier.singleQuote": true,
+    "prettier.printWidth": 100
+  }
+  

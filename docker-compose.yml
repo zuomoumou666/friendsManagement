@@ -1,0 +1,26 @@
+version: "3"
+services:
+  friends-management:
+    container_name: friends-management
+    image: friends-management
+    build: .
+    command: "npm run debug"
+    volumes:
+      - ".:/friends-api"
+    ports:
+      - "8999:3000"
+      - "9229:9229"
+    env_file:
+      - .env
+    links:
+      - friends-management-mongo
+    depends_on:
+      - friends-management-mongo
+  friends-management-mongo:
+    image: "mongo:3.6.6"
+    container_name: friends-management-mongo
+    ports:
+      - "8998:27017"
+    volumes:
+      - "./.data/mongo:/data/db"
+      - "./.data/mongoconfigdb:/data/configdb"
