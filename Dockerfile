@@ -5,6 +5,6 @@ WORKDIR /friends-api
 ADD . /friends-api
 RUN yarn install
 
-EXPOSE 3000
+#EXPOSE 3000
 
-CMD ["npm", "run", "debug"]
+#CMD ["npm", "run", "debug"]

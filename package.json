@@ -36,6 +36,7 @@
     "@types/mongoose": "^5.0.18",
     "@types/node": "^10.3.5",
     "@types/ramda": "^0.25.34",
+    "@types/validator": "^9.4.1",
     "concurrently": "^3.6.0",
     "dotenv": "^6.0.0",
     "http-status": "^1.2.0",
@@ -46,7 +47,8 @@
     "mongoose": "^5.1.7",
     "nodemon": "^1.17.5",
     "ramda": "^0.25.0",
-    "tslint-config-airbnb": "^5.9.2"
+    "tslint-config-airbnb": "^5.9.2",
+    "validator": "^10.6.0"
   },
   "_moduleAliases": {
     "models": "dist/models",

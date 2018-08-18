@@ -1,9 +1,11 @@
-require("module-alias/register");
+// require("module-alias/register");
 import koa from "koa";
 import mongoose from "mongoose";
 import koaBodyparser from "koa-bodyparser";
 import "./config/env";
 import { default as initDB } from "./seeding";
+import { router } from "./routes";
+import { finalErrorHandler } from "./middleware/error";
 
 const { PORT, MONGO_DB_URL } = process.env;
 
@@ -13,12 +15,8 @@ process.on("unhandledRejection", (error: any) => {
 
 const app = new koa();
 
-app.use(koaBodyparser()).use(ctx => {
-  console.log("ctx", ctx);
-});
-
 mongoose.connect(
-  MONGO_DB_URL + "",
+  `${MONGO_DB_URL}`,
   { useNewUrlParser: true },
   async (err: mongoose.Error) => {
     console.log("connect success");
@@ -29,6 +27,10 @@ mongoose.connect(
     }
     // initial data seeding
     await initDB();
+    app
+      .use(finalErrorHandler())
+      .use(koaBodyparser())
+      .use(router.routes());
     app.listen(PORT);
   }
 );

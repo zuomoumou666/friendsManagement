@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { UserModel } from "models";
+import { UserModel } from "../models";
 
 const mocks = [
   "andy@example.com",
