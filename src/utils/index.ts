@@ -21,4 +21,8 @@ const validate = {
     if (!validator.isEmail(email)) throw new MyError(ErrorKeyEnum.InvalidEmail);
   }
 };
-export { validate };
+
+function extractEmails(text: string) {
+  return text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
+}
+export { validate, extractEmails };

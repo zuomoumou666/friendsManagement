@@ -1,0 +1,39 @@
+post:
+  tags:
+    - friends
+  summary: retrieve all email addresses
+  description: As a user, I need an API to retrieve all email addresses that can receive updates from an email address.
+  operationId: friends/retrieveSubscribeList
+  responses:
+    "200":
+      description: ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 1
+              success:
+                type: boolean
+                example: true
+              recipients:
+                type: array
+                items:
+                  allOf:
+                    - type: string
+                example: ["john@example.com"]
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            sender:
+              type: string
+              example: "andy@example.com"
+            text:
+              type: string
+              example: "Hi, alieen@example.com"

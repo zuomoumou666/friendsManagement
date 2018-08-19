@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { default as UserService } from "../services";
 import { MyError, ErrorKeyEnum } from "../middleware/error";
 import { User } from "../schema";
-import { validate } from "../utils";
+import { validate, extractEmails } from "../utils";
 
 export async function makeFriends({ friends }: { friends: string[] }) {
   validate.towEmails(friends);
@@ -11,8 +11,12 @@ export async function makeFriends({ friends }: { friends: string[] }) {
 
   if (users.length !== 2) throw new MyError(ErrorKeyEnum.NotFoundUser);
 
-  if (users[0].isBlocked(users[1].email) || users[1].isBlocked(users[0].email))
+  if (
+    users[0].isBlocked(users[1].email) ||
+    users[1].isBlocked(users[0].email)
+  ) {
     throw new MyError(ErrorKeyEnum.isBlocked);
+  }
 
   await UserService.makeFriends(<User[]>users);
   return {};
@@ -53,8 +57,9 @@ export async function addSubscribe({
   requestor: string;
   target: string;
 }) {
-  if (R.isNil(requestor) || R.isNil(target))
+  if (R.isNil(requestor) || R.isNil(target)) {
     throw new MyError(ErrorKeyEnum.InvalidParams);
+  }
 
   if (requestor === target) throw new MyError(ErrorKeyEnum.FollowYourSelf);
 
@@ -78,8 +83,9 @@ export async function addBlock({
   requestor: string;
   target: string;
 }) {
-  if (R.isNil(requestor) || R.isNil(target))
+  if (R.isNil(requestor) || R.isNil(target)) {
     throw new MyError(ErrorKeyEnum.InvalidParams);
+  }
 
   if (requestor === target) throw new MyError(ErrorKeyEnum.BlockYourSelf);
 
@@ -94,4 +100,29 @@ export async function addBlock({
   await (<User>requestorUser).addBlock(target);
 
   return {};
+}
+
+export async function retrieveSubscribeList({
+  text,
+  sender
+}: {
+  text: string;
+  sender: string;
+}) {
+  if (R.isNil(text) || R.isNil(sender)) {
+    throw new MyError(ErrorKeyEnum.InvalidParams);
+  }
+
+  validate.email(sender);
+
+  const mentions = extractEmails(text);
+
+  const emails = await UserService.retrieveSubscribeList(
+    sender,
+    R.isEmpty(mentions) ? null : mentions
+  );
+
+  return {
+    recipients: emails
+  };
 }

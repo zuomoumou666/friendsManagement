@@ -28,3 +28,5 @@ paths:
     $ref: "./paths/friends/addSubscribe.yml"
   /friends/addBlock:
     $ref: "./paths/friends/addBlock.yml"
+  /friends/retrieveSubscribeList:
+    $ref: "./paths/friends/retrieveSubscribeList.yml"

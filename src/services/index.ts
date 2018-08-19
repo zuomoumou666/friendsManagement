@@ -10,7 +10,7 @@ const userService = {
     return await UserModel.find({ email: { $in: [email1, email2] } });
   },
 
-  makeFriends: (users: User[]) => {
+  makeFriends: async (users: User[]) => {
     return Promise.all(
       users.map(async user => {
         const friendEmail = (
@@ -19,6 +19,30 @@ const userService = {
         await user.addFriend(friendEmail);
       })
     );
+  },
+  retrieveSubscribeList: async (email: string, mentions?: string[] | null) => {
+    const query = {
+      $and: [
+        {
+          $or: [{ friends: email }, { subscribes: email }]
+        },
+        {
+          blocks: {
+            $not: {
+              $in: [email]
+            }
+          }
+        }
+      ]
+    };
+
+    if (!R.isNil(mentions)) {
+      (<any>query.$and[0].$or).push({ email: { $in: mentions } });
+    }
+
+    const users = await UserModel.find(query);
+
+    return R.map(u => u.email, users);
   }
 };
 

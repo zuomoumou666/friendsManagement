@@ -11,6 +11,7 @@ const getFriendsList = `${prefix}getFriendsList`;
 const getCommonFriends = `${prefix}getCommonFriends`;
 const addSubscribe = `${prefix}addSubscribe`;
 const addBlock = `${prefix}addBlock`;
+const retrieveSubscribeList = `${prefix}retrieveSubscribeList`;
 
 describe("friends management API test", async () => {
   before(async () => {
@@ -339,6 +340,98 @@ describe("friends management API test", async () => {
 
       expect(response.body.code).to.be.eqls(1);
       expect((<any>user).blocks).to.be.eqls([mocks[1]]);
+    });
+  });
+
+  describe(retrieveSubscribeList, async () => {
+    it("should be throw Error if not send params", async () => {
+      const response = await supertest(server)
+        .post(retrieveSubscribeList)
+        .send({});
+
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if lost text", async () => {
+      const response = await supertest(server)
+        .post(retrieveSubscribeList)
+        .send({
+          sender: mocks[0]
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if lost requestor", async () => {
+      const response = await supertest(server)
+        .post(retrieveSubscribeList)
+        .send({
+          text: "hi."
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if input a wrong email", async () => {
+      const response = await supertest(server)
+        .post(retrieveSubscribeList)
+        .send({
+          sender: "123",
+          text: "234"
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidEmail);
+    });
+
+    it("should be success", async () => {
+      await dropDB();
+      await initDB();
+
+      const me = mocks[0];
+
+      const friends = [mocks[1], mocks[2]];
+
+      const fans = [mocks[3], mocks[4]];
+
+      const mentions = [mocks[5]];
+      await Promise.all(
+        friends.map(async f => {
+          await supertest(server)
+            .post(makeFriends)
+            .send({
+              friends: [me, f]
+            });
+        })
+      );
+
+      await Promise.all(
+        fans.map(async f => {
+          await supertest(server)
+            .post(addSubscribe)
+            .send({
+              requestor: f,
+              target: me
+            });
+        })
+      );
+
+      await supertest(server)
+        .post(addBlock)
+        .send({
+          requestor: friends[1],
+          target: me
+        });
+
+      const response = await supertest(server)
+        .post(retrieveSubscribeList)
+        .send({
+          sender: me,
+          text: `Hi ${mentions[0]}`
+        });
+
+      expect(response.body.recipients.sort()).to.be.eqls(
+        fans
+          .concat(friends[0])
+          .concat(mentions)
+          .sort()
+      );
     });
   });
 });
