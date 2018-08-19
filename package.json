@@ -51,5 +51,10 @@
   "_moduleAliases": {
     "models": "dist/models",
     "errors": "dist/errors"
+  },
+  "nodemonConfig": {
+    "verbose": true,
+    "ignore": [],
+    "delay": "2000"
   }
 }

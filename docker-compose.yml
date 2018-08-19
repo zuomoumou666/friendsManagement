@@ -9,7 +9,7 @@ services:
       - ".:/friends-api"
     ports:
       - "8999:3000"
-      - "9229:9229"
+      - "9228:9228"
     env_file:
       - .env
     links:
