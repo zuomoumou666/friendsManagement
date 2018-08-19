@@ -24,3 +24,12 @@ services:
     volumes:
       - "./.data/mongo:/data/db"
       - "./.data/mongoconfigdb:/data/configdb"
+  friends-doc:
+    image: "swaggerapi/swagger-ui:v3.3.1"
+    container_name: friends-doc
+    ports:
+      - "5400:8080"
+    volumes:
+      - "./swagger/:/usr/share/nginx/html/"
+      - "./doc/api/:/usr/share/nginx/html/api"
+      - "./swagger/nginx.conf:/etc/nginx/nginx.conf"

@@ -4,9 +4,10 @@ import koaBodyparser from "koa-bodyparser";
 import "./config/env";
 import { router } from "./routes";
 import { finalErrorHandler } from "./middleware/error";
+import cors from "./middleware/cors";
 import { default as initDB } from "./seeding";
 
-const { PORT, MONGO_DB_URL } = process.env;
+const { PORT, MONGO_DB_URL, RUN_ENV } = process.env;
 
 process.on("unhandledRejection", (error: any) => {
   console.log("unhandledRejection", error);
@@ -26,6 +27,8 @@ mongoose.connect(
     }
     // initial data seeding
     await initDB();
+    RUN_ENV === "DEBUG" && app.use(cors({}));
+
     app
       .use(finalErrorHandler())
       .use(koaBodyparser())

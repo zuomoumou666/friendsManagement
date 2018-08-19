@@ -1,0 +1,22 @@
+openapi: 3.0.0
+info:
+  description: Friends Management document
+  version: 1.0.0
+  title: Friends Management document
+  license:
+    name: jinquan
+servers:
+  - url: "http://127.0.0.1:8999/api/v1"
+    description: local
+tags:
+  - name: friends
+    description: friends-desc.
+#components:
+#  securitySchemes:
+#    ApiKeyAuth:
+#      type: apiKey
+#      name: session-token
+#      in: header
+paths:
+  /friends/addFriends:
+    $ref: "./paths/friends/addFriends.yml#paths/add"

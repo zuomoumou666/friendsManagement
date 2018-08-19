@@ -3,3 +3,4 @@ dist/
 yarn-error.log
 .data/
 mochawesome-report/
+.DS_Store
