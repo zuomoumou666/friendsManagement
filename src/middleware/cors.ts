@@ -22,27 +22,28 @@ export default function(options: any) {
   };
 
   // tslint:disable-next-line:no-param-reassign
-  options = Object.assign({}, defaults, options);
+  const finalOpts = Object.assign({}, defaults, options);
 
-  if (Array.isArray(options.exposeHeaders)) {
-    options.exposeHeaders = options.exposeHeaders.join(",");
+  if (Array.isArray(finalOpts.exposeHeaders)) {
+    finalOpts.exposeHeaders = finalOpts.exposeHeaders.join(",");
   }
 
-  if (Array.isArray(options.allowMethods)) {
-    options.allowMethods = options.allowMethods.join(",");
+  if (Array.isArray(finalOpts.allowMethods)) {
+    finalOpts.allowMethods = finalOpts.allowMethods.join(",");
   }
 
-  if (Array.isArray(options.allowHeaders)) {
-    options.allowHeaders = options.allowHeaders.join(",");
+  if (Array.isArray(finalOpts.allowHeaders)) {
+    finalOpts.allowHeaders = finalOpts.allowHeaders.join(",");
   }
 
-  if (options.maxAge) {
-    options.maxAge = String(options.maxAge);
+  if (finalOpts.maxAge) {
+    finalOpts.maxAge = String(finalOpts.maxAge);
   }
 
-  options.credentials = !!options.credentials;
-  options.keepHeadersOnError =
-    options.keepHeadersOnError === undefined || !!options.keepHeadersOnError;
+  finalOpts.credentials = !!finalOpts.credentials;
+  finalOpts.keepHeadersOnError =
+    finalOpts.keepHeadersOnError === undefined ||
+    !!finalOpts.keepHeadersOnError;
 
   return function cors(ctx: any, next: any) {
     // If the Origin header is not present terminate this set of steps.
@@ -59,14 +60,14 @@ export default function(options: any) {
 
     let origin;
 
-    if (typeof options.origin === "function") {
+    if (typeof finalOpts.origin === "function") {
       // FIXME: origin can be promise
-      origin = options.origin(ctx);
+      origin = finalOpts.origin(ctx);
       if (!origin) {
         return next();
       }
     } else {
-      origin = options.origin || requestOrigin;
+      origin = finalOpts.origin || requestOrigin;
     }
 
     const headersSet: any = {};
@@ -80,55 +81,55 @@ export default function(options: any) {
       // Simple Cross-Origin Request, Actual Request, and Redirects
       set("Access-Control-Allow-Origin", origin);
 
-      if (options.credentials === true) {
+      if (finalOpts.credentials === true) {
         set("Access-Control-Allow-Credentials", "true");
       }
 
-      if (options.exposeHeaders) {
-        set("Access-Control-Expose-Headers", options.exposeHeaders);
+      if (finalOpts.exposeHeaders) {
+        set("Access-Control-Expose-Headers", finalOpts.exposeHeaders);
       }
 
-      if (!options.keepHeadersOnError) {
+      if (!finalOpts.keepHeadersOnError) {
         return next();
       }
       return next().catch((err: any) => {
         err.headers = Object.assign({}, err.headers, headersSet);
         throw err;
       });
-    } else {
-      // Preflight Request
-
-      // If there is no Access-Control-Request-Method header or if parsing failed,
-      // do not set any additional headers and terminate this set of steps.
-      // The request is outside the scope of this specification.
-      if (!ctx.get("Access-Control-Request-Method")) {
-        // this not preflight request, ignore it
-        return next();
-      }
-
-      ctx.set("Access-Control-Allow-Origin", origin);
-
-      if (options.credentials === true) {
-        ctx.set("Access-Control-Allow-Credentials", "true");
-      }
-
-      if (options.maxAge) {
-        ctx.set("Access-Control-Max-Age", options.maxAge);
-      }
-
-      if (options.allowMethods) {
-        ctx.set("Access-Control-Allow-Methods", options.allowMethods);
-      }
-
-      let allowHeaders = options.allowHeaders;
-      if (!allowHeaders) {
-        allowHeaders = ctx.get("Access-Control-Request-Headers");
-      }
-      if (allowHeaders) {
-        ctx.set("Access-Control-Allow-Headers", allowHeaders);
-      }
-
-      ctx.status = 204;
     }
+    // Preflight Request
+
+    // If there is no Access-Control-Request-Method header or if parsing failed,
+    // do not set any additional headers and terminate this set of steps.
+    // The request is outside the scope of this specification.
+    if (!ctx.get("Access-Control-Request-Method")) {
+      // this not preflight request, ignore it
+      return next();
+    }
+
+    ctx.set("Access-Control-Allow-Origin", origin);
+
+    if (finalOpts.credentials === true) {
+      ctx.set("Access-Control-Allow-Credentials", "true");
+    }
+
+    if (finalOpts.maxAge) {
+      ctx.set("Access-Control-Max-Age", finalOpts.maxAge);
+    }
+
+    if (finalOpts.allowMethods) {
+      ctx.set("Access-Control-Allow-Methods", finalOpts.allowMethods);
+    }
+
+    let allowHeaders = finalOpts.allowHeaders;
+    if (!allowHeaders) {
+      allowHeaders = ctx.get("Access-Control-Request-Headers");
+    }
+    if (allowHeaders) {
+      ctx.set("Access-Control-Allow-Headers", allowHeaders);
+    }
+
+    ctx.status = 204;
+    return next();
   };
 }

@@ -13,3 +13,4 @@ docker-compose.yml
 .vscode/
 npm-version/
 mochawesome-report/
+node_modules/
