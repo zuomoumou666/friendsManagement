@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Friends management",
   "main": "dist/server.js",
-  "author": "jinquan",
+  "author": "zuomoumou666@gmail.com",
   "license": "MIT",
   "scripts": {
     "start": "npm run serve",
