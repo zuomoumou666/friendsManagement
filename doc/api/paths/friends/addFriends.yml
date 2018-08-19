@@ -1,35 +1,33 @@
-paths:
-  add:
-    post:
-      tags:
-        - friends
-      summary: connection between two email addresses
-      description: connection between two email addresses
-      operationId: friends/addFriends
-      responses:
-        "200":
-          description: ok
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  code:
-                    type: number
-                    example: 1
-                  success:
-                    type: boolean
-                    example: true
+post:
+  tags:
+    - friends
+  summary: connection between two email addresses
+  description: connection between two email addresses
+  operationId: friends/addFriends
+  responses:
+    "200":
+      description: ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 1
+              success:
+                type: boolean
+                example: true
 
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                friends:
-                  type: array
-                  items:
-                    allOf:
-                      - type: string
-                  example: ["andy@example.com", "john@example.com"]
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            friends:
+              type: array
+              items:
+                allOf:
+                  - type: string
+              example: ["andy@example.com", "john@example.com"]

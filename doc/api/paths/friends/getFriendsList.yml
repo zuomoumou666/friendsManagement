@@ -1,0 +1,39 @@
+post:
+  tags:
+    - friends
+  summary: get friends list.
+  description: As a user, I need an API to retrieve the friends list for an email address.
+  operationId: friends/getFriendsList
+  responses:
+    "200":
+      description: ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 1
+              success:
+                type: boolean
+                example: true
+              friends:
+                type: array
+                items:
+                  allOf:
+                    - type: string
+                example: ["john@example.com"]
+              count:
+                type: number
+                example: 1
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              example: "andy@example.com"

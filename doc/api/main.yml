@@ -19,4 +19,6 @@ tags:
 #      in: header
 paths:
   /friends/addFriends:
-    $ref: "./paths/friends/addFriends.yml#paths/add"
+    $ref: "./paths/friends/addFriends.yml"
+  /friends/getFriendsList:
+    $ref: "./paths/friends/getFriendsList.yml"
