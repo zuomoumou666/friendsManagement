@@ -51,7 +51,14 @@ Use `mongoose` to connect the `MongoDB`.
 
 ## Test
 
-Test with `Mocha`. You can use `npm run test:api` to test API.It will generate reports in `src/mochawesoome-report`
+Test with `Mocha`. You can open a new terminal to run
+
+```
+$ yarn install
+$ npm run test:api
+```
+
+It will generate reports in `src/mochawesoome-report`
 
 ## Code Style
 
