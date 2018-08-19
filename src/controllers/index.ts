@@ -11,6 +11,9 @@ export async function makeFriends({ friends }: { friends: string[] }) {
 
   if (users.length !== 2) throw new MyError(ErrorKeyEnum.NotFoundUser);
 
+  if (users[0].isBlocked(users[1].email) || users[1].isBlocked(users[0].email))
+    throw new MyError(ErrorKeyEnum.isBlocked);
+
   await UserService.makeFriends(<User[]>users);
   return {};
 }

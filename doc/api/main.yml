@@ -26,3 +26,5 @@ paths:
     $ref: "./paths/friends/getCommonFriends.yml"
   /friends/addSubscribe:
     $ref: "./paths/friends/addSubscribe.yml"
+  /friends/addBlock:
+    $ref: "./paths/friends/addBlock.yml"

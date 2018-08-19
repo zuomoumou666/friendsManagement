@@ -70,6 +70,22 @@ describe("friends management API test", async () => {
       expect((<any>user1).friends).to.be.eqls([mocks[1]]);
       expect((<any>user2).friends).to.be.eqls([mocks[0]]);
     });
+
+    it("should be throw Error if the email is blocked", async () => {
+      await supertest(server)
+        .post(addBlock)
+        .send({
+          requestor: mocks[2],
+          target: mocks[3]
+        });
+
+      const response = await supertest(server)
+        .post(makeFriends)
+        .send({
+          friends: [mocks[2], mocks[3]]
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.isBlocked);
+    });
   });
 
   describe(getFriendsList, async () => {
