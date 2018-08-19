@@ -10,6 +10,7 @@ const makeFriends = `${prefix}addFriends`;
 const getFriendsList = `${prefix}getFriendsList`;
 const getCommonFriends = `${prefix}getCommonFriends`;
 const addSubscribe = `${prefix}addSubscribe`;
+const addBlock = `${prefix}addBlock`;
 
 describe("friends management API test", async () => {
   before(async () => {
@@ -248,6 +249,80 @@ describe("friends management API test", async () => {
 
       expect(response.body.code).to.be.eqls(1);
       expect((<any>user).subscribes).to.be.eqls([mocks[1]]);
+    });
+  });
+  describe(addBlock, async () => {
+    it("should be throw Error if not send params", async () => {
+      const response = await supertest(server)
+        .post(addBlock)
+        .send({});
+
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if lost target", async () => {
+      const response = await supertest(server)
+        .post(addBlock)
+        .send({
+          requestor: mocks[0]
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if lost requestor", async () => {
+      const response = await supertest(server)
+        .post(addBlock)
+        .send({
+          target: mocks[0]
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if input a wrong email", async () => {
+      const response = await supertest(server)
+        .post(addBlock)
+        .send({
+          requestor: "123",
+          target: "234"
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidEmail);
+    });
+
+    it("should be throw Error if cannot found users", async () => {
+      const response = await supertest(server)
+        .post(addBlock)
+        .send({
+          requestor: "123@123.com",
+          target: "234@123.com"
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.NotFoundUser);
+    });
+
+    it("should be throw Error if requestor === target", async () => {
+      const response = await supertest(server)
+        .post(addBlock)
+        .send({
+          requestor: mocks[0],
+          target: mocks[0]
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.BlockYourSelf);
+    });
+
+    it("should be success", async () => {
+      await dropDB();
+      await initDB();
+
+      const response = await supertest(server)
+        .post(addBlock)
+        .send({
+          requestor: mocks[0],
+          target: mocks[1]
+        });
+
+      const user = await userService.getUserByEmail(mocks[0]);
+
+      expect(response.body.code).to.be.eqls(1);
+      expect((<any>user).blocks).to.be.eqls([mocks[1]]);
     });
   });
 });

@@ -67,3 +67,28 @@ export async function addSubscribe({
 
   return {};
 }
+
+export async function addBlock({
+  requestor,
+  target
+}: {
+  requestor: string;
+  target: string;
+}) {
+  if (R.isNil(requestor) || R.isNil(target))
+    throw new MyError(ErrorKeyEnum.InvalidParams);
+
+  if (requestor === target) throw new MyError(ErrorKeyEnum.BlockYourSelf);
+
+  validate.towEmails([requestor, target]);
+
+  const users = await UserService.getTwoUsers(requestor, target);
+
+  if (users.length !== 2) throw new MyError(ErrorKeyEnum.NotFoundUser);
+
+  const requestorUser = R.find(R.propEq("email", requestor), users);
+
+  await (<User>requestorUser).addBlock(target);
+
+  return {};
+}
