@@ -9,6 +9,7 @@ export interface User extends mongoose.Document {
   blocks: [string];
   isBlocked(email: string): boolean;
   addFriend(email: string): boolean;
+  addSubscribe(email: string): boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,6 +36,15 @@ userSchema.methods.isBlocked = (email: string) => {
 userSchema.methods.addFriend = async function(email: string) {
   if (!R.any(R.equals(email), this.friends)) {
     this.friends.push(email);
+    await this.save();
+    return true;
+  }
+  return false;
+};
+
+userSchema.methods.addSubscribe = async function(email: string) {
+  if (!R.any(R.equals(email), this.subscribes)) {
+    this.subscribes.push(email);
     await this.save();
     return true;
   }

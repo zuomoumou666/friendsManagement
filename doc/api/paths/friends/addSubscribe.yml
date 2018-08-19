@@ -1,0 +1,33 @@
+post:
+  tags:
+    - friends
+  summary: subscribing to updates
+  description: As a user, I need an API to subscribe to updates from an email address.
+  operationId: friends/addSubscribe
+  responses:
+    "200":
+      description: ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 1
+              success:
+                type: boolean
+                example: true
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            target:
+              type: string
+              example: "andy@example.com"
+            requestor:
+              type: string
+              example: "john@example.com"

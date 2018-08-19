@@ -5,7 +5,7 @@ import { User } from "../schema";
 import { validate } from "../utils";
 
 export async function makeFriends({ friends }: { friends: string[] }) {
-  validate.friends(friends);
+  validate.towEmails(friends);
 
   const users = await UserService.getTwoUsers(friends[0], friends[1]);
 
@@ -29,7 +29,7 @@ export async function getFriendsList({ email }: { email: string }) {
 }
 
 export async function getCommonFriends({ friends }: { friends: string[] }) {
-  validate.friends(friends);
+  validate.towEmails(friends);
 
   const users = await UserService.getTwoUsers(friends[0], friends[1]);
 
@@ -41,4 +41,29 @@ export async function getCommonFriends({ friends }: { friends: string[] }) {
   );
 
   return { friends: commonFriends, count: commonFriends.length };
+}
+
+export async function addSubscribe({
+  requestor,
+  target
+}: {
+  requestor: string;
+  target: string;
+}) {
+  if (R.isNil(requestor) || R.isNil(target))
+    throw new MyError(ErrorKeyEnum.InvalidParams);
+
+  if (requestor === target) throw new MyError(ErrorKeyEnum.FollowYourSelf);
+
+  validate.towEmails([requestor, target]);
+
+  const users = await UserService.getTwoUsers(requestor, target);
+
+  if (users.length !== 2) throw new MyError(ErrorKeyEnum.NotFoundUser);
+
+  const requestorUser = R.find(R.propEq("email", requestor), users);
+
+  await (<User>requestorUser).addSubscribe(target);
+
+  return {};
 }

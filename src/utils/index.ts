@@ -3,7 +3,7 @@ import validator from "validator";
 import { MyError, ErrorKeyEnum } from "../middleware/error";
 
 const validate = {
-  friends: (friends: string[]) => {
+  towEmails: (friends: string[]) => {
     if (R.isNil(friends) || !friends.length || friends.length !== 2) {
       throw new MyError(ErrorKeyEnum.InvalidParams);
     }
