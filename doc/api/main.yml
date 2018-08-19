@@ -22,3 +22,5 @@ paths:
     $ref: "./paths/friends/addFriends.yml"
   /friends/getFriendsList:
     $ref: "./paths/friends/getFriendsList.yml"
+  /friends/getCommonFriends:
+    $ref: "./paths/friends/getCommonFriends.yml"

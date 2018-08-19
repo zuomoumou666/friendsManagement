@@ -8,6 +8,7 @@ import { ErrorKeyEnum } from "../../consts";
 const prefix = "/api/v1/friends/";
 const makeFriends = `${prefix}addFriends`;
 const getFriendsList = `${prefix}getFriendsList`;
+const getCommonFriends = `${prefix}getCommonFriends`;
 
 describe("friends management API test", async () => {
   before(async () => {
@@ -84,6 +85,7 @@ describe("friends management API test", async () => {
         });
       expect(response.body).with.property("code", ErrorKeyEnum.InvalidEmail);
     });
+
     it("should be success", async () => {
       await dropDB();
       await initDB();
@@ -111,6 +113,65 @@ describe("friends management API test", async () => {
         code: 1,
         friends: [mocks[1], mocks[2]],
         count: 2
+      });
+    });
+  });
+
+  describe(getCommonFriends, async () => {
+    it("should be throw Error if friends = []", async () => {
+      const response = await supertest(server)
+        .post(getCommonFriends)
+        .send({
+          friends: []
+        });
+
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if friends.length === 1", async () => {
+      const response = await supertest(server)
+        .post(getCommonFriends)
+        .send({
+          friends: [mocks[0]]
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidParams);
+    });
+
+    it("should be throw Error if input a wrong email", async () => {
+      const response = await supertest(server)
+        .post(getCommonFriends)
+        .send({
+          friends: ["adf", "ccc"]
+        });
+      expect(response.body).with.property("code", ErrorKeyEnum.InvalidEmail);
+    });
+
+    it("should be success", async () => {
+      await dropDB();
+      await initDB();
+      await supertest(server)
+        .post(makeFriends)
+        .send({
+          friends: [mocks[0], mocks[1]]
+        });
+
+      await supertest(server)
+        .post(makeFriends)
+        .send({
+          friends: [mocks[0], mocks[2]]
+        });
+
+      const response = await supertest(server)
+        .post(getCommonFriends)
+        .send({
+          friends: [mocks[1], mocks[2]]
+        });
+
+      expect(response.body).to.be.eqls({
+        success: true,
+        code: 1,
+        friends: [mocks[0]],
+        count: 1
       });
     });
   });

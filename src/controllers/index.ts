@@ -1,17 +1,11 @@
 import * as R from "ramda";
-import validator from "validator";
 import { default as UserService } from "../services";
 import { MyError, ErrorKeyEnum } from "../middleware/error";
 import { User } from "../schema";
+import { validate } from "../utils";
 
 export async function makeFriends({ friends }: { friends: string[] }) {
-  if (R.isNil(friends) || !friends.length || friends.length !== 2) {
-    throw new MyError(ErrorKeyEnum.InvalidParams);
-  }
-
-  if (R.any(email => !validator.isEmail(email), friends)) {
-    throw new MyError(ErrorKeyEnum.InvalidEmail);
-  }
+  validate.friends(friends);
 
   const users = await UserService.getTwoUsers(friends[0], friends[1]);
 
@@ -22,10 +16,7 @@ export async function makeFriends({ friends }: { friends: string[] }) {
 }
 
 export async function getFriendsList({ email }: { email: string }) {
-  if (R.isNil(email) || R.isEmpty(email)) {
-    throw new MyError(ErrorKeyEnum.InvalidParams);
-  }
-  if (!validator.isEmail(email)) throw new MyError(ErrorKeyEnum.InvalidEmail);
+  validate.email(email);
 
   const user = await UserService.getUserByEmail(email);
 
@@ -35,4 +26,19 @@ export async function getFriendsList({ email }: { email: string }) {
     friends: user.friends,
     count: user.friends.length
   };
+}
+
+export async function getCommonFriends({ friends }: { friends: string[] }) {
+  validate.friends(friends);
+
+  const users = await UserService.getTwoUsers(friends[0], friends[1]);
+
+  if (users.length !== 2) throw new MyError(ErrorKeyEnum.NotFoundUser);
+
+  const commonFriends = R.filter(
+    email => R.any(R.equals(email), users[1].friends),
+    users[0].friends
+  );
+
+  return { friends: commonFriends, count: commonFriends.length };
 }

@@ -1,9 +1,9 @@
 post:
   tags:
     - friends
-  summary: connection between two email addresses
-  description: As a user, I need an API to create a friend connection between two email addresses.
-  operationId: friends/addFriends
+  summary: get common friends.
+  description: As a user, I need an API to retrieve the common friends list between two email addresses.
+  operationId: friends/getCommonFriends
   responses:
     "200":
       description: ok
@@ -18,6 +18,15 @@ post:
               success:
                 type: boolean
                 example: true
+              friends:
+                type: array
+                items:
+                  allOf:
+                    - type: string
+                example: ["john@example.com"]
+              count:
+                type: number
+                example: 1
 
   requestBody:
     content:
