@@ -57,7 +57,7 @@
     "mongoose": "^5.1.7",
     "nodemon": "^1.17.5",
     "ramda": "^0.25.0",
-    "validator": "^10.6.0"
+    "validator": "^13.7.0"
   },
   "nodemonConfig": {
     "verbose": true,
